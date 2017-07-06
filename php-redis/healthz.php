@@ -14,6 +14,7 @@ function test_redis($host) {
             'host'   => $host,
             'port'   => 6379,
         ]);
+        $client->connect();
         return true;
     } catch (Exception $e) {
         return false;
