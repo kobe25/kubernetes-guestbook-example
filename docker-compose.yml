@@ -1,0 +1,25 @@
+version: "3.0"
+services:
+  app:
+    build: app
+    environment:
+      REDIS_SLAVE_REPLICAS: "1"
+      REDIS_WRITE_TIMEOUT: "10"
+    ports:
+    - "127.0.0.1:8080:8080"
+    volumes:
+    - "./app:/code:ro"
+    restart: on-failure
+  redis-slave:
+    image: redis:4.0
+    command: [
+      "/usr/local/bin/redis-server",
+      "--slaveof", "redis-master", "6379"]
+    restart: on-failure
+  redis-master:
+    image: redis:4.0
+    command: [
+      "/usr/local/bin/redis-server",
+      "--appendonly", "yes",
+      "--appendfsync", "always"]
+    restart: on-failure
